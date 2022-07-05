@@ -22,7 +22,6 @@
 
 (defn go-to-url
   [{:keys [word-or-phrase target-lang native-lang]}]
-  (let [opts (clj->js {:extraHeaders "Origin: https://lexin.oslomet.no"})])
   (.loadURL ^js (.-webContents ^BrowserView @t-win)
             (if (and word-or-phrase target-lang native-lang)
               ((str "https://editorportal.oslomet.no/api/v1/findwords?"
