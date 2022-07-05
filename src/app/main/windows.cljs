@@ -26,7 +26,8 @@
             (if (and word-or-phrase target-lang native-lang)
               ((str "https://editorportal.oslomet.no/api/v1/findwords?"
                     "searchWord=" word-or-phrase
-                    "&lang=bokm%C3%A5l-engelsk&page=1&selectLang=bokm%C3%A5l") (clj->js {:extraHeaders "Origin: https://lexin.oslomet.no"}))
+                    "&lang=bokm%C3%A5l-engelsk&page=1&selectLang=bokm%C3%A5l"))
+               ;;                (clj->js {:extraHeaders "Origin: https://lexin.oslomet.no"}))
               ;; str "https://translate.google.com"
               ;; "?sl=" target-lang "&tl=" native-lang
               ;; "&text=" word-or-phrase "&op=translate"
