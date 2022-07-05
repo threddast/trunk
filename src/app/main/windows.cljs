@@ -2,7 +2,6 @@
   (:require
    ["electron" :refer [BrowserWindow BrowserView app dialog]]))
 
-
 (def main-window (atom nil))
 (def t-win (atom nil))
 
@@ -15,8 +14,7 @@
                      :minWidth 600
                      :webPreferences
                      {:nodeIntegration  true
-                      :contextIsolation false ;; come back and figure out preload.js someday.
-                      }})))
+                      :contextIsolation false}}))) ;; come back and figure out preload.js someday.
 
   ;; (init-browser-view)
   (.loadURL ^js/electron.BrowserWindow @main-window (str "file://" js/__dirname "/public/index.html"))
@@ -24,24 +22,28 @@
 
 (defn go-to-url
   [{:keys [word-or-phrase target-lang native-lang]}]
-  (.loadURL ^js (.-webContents ^BrowserView @t-win )
+  (let [opts (clj->js {:extraHeaders "Origin: https://lexin.oslomet.no"})])
+  (.loadURL ^js (.-webContents ^BrowserView @t-win)
             (if (and word-or-phrase target-lang native-lang)
-              (str "https://translate.google.com"
-                   "?sl=" target-lang "&tl=" native-lang
-                   "&text=" word-or-phrase "&op=translate")
+              ((str "https://editorportal.oslomet.no/api/v1/findwords?"
+                    "searchWord=" word-or-phrase
+                    "&lang=bokm%C3%A5l-engelsk&page=1&selectLang=bokm%C3%A5l") (clj->js {:extraHeaders "Origin: https://lexin.oslomet.no"}))
+              ;; str "https://translate.google.com"
+              ;; "?sl=" target-lang "&tl=" native-lang
+              ;; "&text=" word-or-phrase "&op=translate"
               "https://translate.google.com")))
 
 (defn t-win-init
   "Used for mini google translate window."
-  [{:keys [width height containerHeight button-height containerWidth] :as data} ]
+  [{:keys [width height containerHeight button-height containerWidth] :as data}]
   (let [pos {:x      (- width (int containerWidth))
-             :y      (- height button-height (int containerHeight) )
+             :y      (- height button-height (int containerHeight))
              :width  (int containerWidth)
              :height (int containerHeight)}]
-  (reset! t-win (BrowserView.))
-  (.setBrowserView ^js/electron.BrowserWindow @main-window @t-win)
-  (.setBounds ^js/electron.BrowserView @t-win (clj->js pos))
-  (go-to-url (select-keys data [:word-or-phrase :target-lang :native-lang]))))
+    (reset! t-win (BrowserView.))
+    (.setBrowserView ^js/electron.BrowserWindow @main-window @t-win)
+    (.setBounds ^js/electron.BrowserView @t-win (clj->js pos))
+    (go-to-url (select-keys data [:word-or-phrase :target-lang :native-lang]))))
 
 (defn t-win-update-word
   [data]
