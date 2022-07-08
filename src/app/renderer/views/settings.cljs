@@ -324,6 +324,15 @@
                                      :current-word-idx    nil}]) dummy-word-data)])
                  [:div.pl-2 "Regex is invalid."])]]
 
+             [:div.my-4
+              [component/input
+               {:label         "Dictionary URL"
+                ;; :default-value (get @language-to-edit :word_regex)
+                ;; :value         (@language-to-edit-form :word_regex)
+                ;; :valid?        word-regex?
+                ;; :on-change     #(update-lang-to-edit-form (.. % -target -value) :word_regex)
+                }]]
+
              [component/button {:text      "Add a new language"
                                 :style     "primary"
                                 :on-click  #(|> [(s-ev :language-create) @language-to-edit-form])
