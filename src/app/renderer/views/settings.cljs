@@ -281,6 +281,14 @@
                                  :valid?        #(= (count %) 2)
                                  :on-change     #(update-lang-to-edit-form (.. % -target -value) :iso_639_1)}]]]
 
+             [:div.my-4
+              [component/input
+               {:label         "Dictionary URL"
+                ;; :default-value (get @language-to-edit :word_regex)
+                ;; :value         (@language-to-edit-form :word_regex)
+                ;; :valid?        word-regex?
+                ;; :on-change     #(update-lang-to-edit-form (.. % -target -value) :word_regex)
+                }]]
              [:div.flex.justify-between.mt-4
               [:div.flex-1
                [component/input {:label         "Text splitting regex"
@@ -323,15 +331,6 @@
                                      :current-phrase-idxs nil
                                      :current-word-idx    nil}]) dummy-word-data)])
                  [:div.pl-2 "Regex is invalid."])]]
-
-             [:div.my-4
-              [component/input
-               {:label         "Dictionary URL"
-                ;; :default-value (get @language-to-edit :word_regex)
-                ;; :value         (@language-to-edit-form :word_regex)
-                ;; :valid?        word-regex?
-                ;; :on-change     #(update-lang-to-edit-form (.. % -target -value) :word_regex)
-                }]]
 
              [component/button {:text      "Add a new language"
                                 :style     "primary"
