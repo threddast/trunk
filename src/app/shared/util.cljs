@@ -16,8 +16,8 @@
 
 (def comfort-text-and-col
   {0 {:name      "Unknown"
-      :text-col  "text-gray-800 dark:text-gray-200"
-      :bg-col    "bg-gray-300 dark:bg-gray-800"
+      :text-col  "text-blue-500"
+      :bg-col    "bg-blue-300"
       :help-text "A word with no comfort or translation assigned."}
    1 {:name      "Hard"
       :text-col  "text-red-500"
@@ -38,7 +38,7 @@
    5 {:name      "Ignore"
       :text-col  "text-gray-500 dark:text-gray-400"
       :bg-col    "bg-gray-50 dark:bg-gray-900"
-      :help-text "Ignore this word (ex: proper nouns, untranslateable words etc.)"}})
+      :help-text "Ignore this word (ex: proper nouns, untranslatable words etc.)"}})
 
 (defn get-comfort-level-name [idx]
   (-> idx comfort-text-and-col :name))
@@ -72,7 +72,6 @@
         regex (re-pattern rx-str)]
 
     (re-matches regex w)))
-
 
 (defn is-phrase
   "Phrases have the key `:first_word_slug`, so check if it's present on the map."
