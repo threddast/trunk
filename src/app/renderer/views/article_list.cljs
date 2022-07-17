@@ -31,11 +31,11 @@
           (when-let [x (u/date-unix->readable last_opened)]
             [:div.text-xs "Last opened: " x [:span.mx-2 "|"]])
           [:div.text-xs " Date created: " (u/date-unix->readable date_created)]]
-         [:div.text-xs " Date created: "]
+         [:div.text-xs " Date created: " (u/date-unix->readable date_created)]
          [:div.text-xs.opacity-50.hover:opacity-100.text-red-800.hover:text-red-500.dark:text-red-400
           {:on-click handle-delete}
-          (case @sure? 0 "Delete" 1 "Sure?")]
-         [:div.pt-2.italic (u/trunc-ellipse original 100)]]]])))
+          (case @sure? 0 "Delete" 1 "Sure?")]]
+        [:div.pt-2.italic (u/trunc-ellipse original 100)]]])))
 
 (defn view
   []
