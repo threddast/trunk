@@ -14,6 +14,8 @@
   "Display a single article in the article list view."
   [{:keys [article_id]}]
   (let [sure?    (r/atom 0)
+        current-article     (<| [::subs/current-article])
+        total-words         (count (get current-article :word-data))
         handle-delete (fn [event]
                         (.stopPropagation event)
                         (cond
@@ -21,18 +23,19 @@
                           (= 1 @sure?) (|> [(s-ev :article-delete) article_id])))]
     (fn
       [{:keys [name original last_opened date_created]}]
-      [:div {:class "mb-4 text-gray-900 bg-white p-4 border-gray-100 border shadow-sm hover:shadow dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:text-gray-50" }
+      [:div {:class "mb-4 text-gray-900 bg-white p-4 border-gray-100 border shadow-sm hover:shadow dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:text-gray-50"}
        [:div.text-md.py-1 (u/trunc-ellipse name 50)]
        [:div.text-sm
         [:div.flex.justify-between
          [:div.flex
           (when-let [x (u/date-unix->readable last_opened)]
             [:div.text-xs "Last opened: " x [:span.mx-2 "|"]])
+          [:div.text-xs " Date created: " (u/date-unix->readable date_created)]
           [:div.text-xs " Date created: " (u/date-unix->readable date_created)]]
          [:div.text-xs.opacity-50.hover:opacity-100.text-red-800.hover:text-red-500.dark:text-red-400
           {:on-click handle-delete}
-          (case @sure? 0 "Delete" 1 "Sure?")]]
-        [:div.pt-2.italic (u/trunc-ellipse original 100)]]])))
+          (case @sure? 0 "Delete" 1 "Sure?")]
+         [:div.pt-2.italic (u/trunc-ellipse original 100)]]]])))
 
 (defn view
   []
@@ -42,7 +45,7 @@
     (when-not @loading? (|> [(s-ev :articles-get) nil]))
     (fn []
       (let [articles  (<| [::subs/articles])
-            curr-lang (-> @settings :target-lang specs/get-lang-by-shortcode )
+            curr-lang (-> @settings :target-lang specs/get-lang-by-shortcode)
             curr-lang (if curr-lang (str/capitalize curr-lang) "")
             articles  (if-not (empty? @search-query)
                         (filter (fn [article] (str/includes? (article :name) @search-query)) articles)
@@ -54,7 +57,7 @@
             [component/empty-state-with-msg]
             [component/container
              [:div {:key "view-article-list"} ;; keep react happy.
-              [component/page-heading (str"Your " curr-lang " Texts")]
+              [component/page-heading (str "Your " curr-lang " Texts")]
               [:div.mb-4
                [component/input
                 {:placeholder "Search texts..."
