@@ -42,10 +42,12 @@
               shift-held?         (<| [::subs/shift-held?])
               form                (r/atom word-or-phrase)
               total-words         (count (get current-article :word-data))
-              words-known         (count (filter (fn [word-data]
+              known-words         (count (filter (fn [word-data]
                                                    (or (not= 0 (word-data :comfort))
                                                        (not= nil (word-data :translation))))
                                                  (-> current-article :word-data)))
+              known-percentage    (int (* (/ known-words total-words) 100))
+
               ;; -- handlers -----
 
               handle-mark-all-known (fn []
@@ -71,8 +73,8 @@
             ;; metadata and actions
             [:div.flex.text-xs.px-4.border-b.border-gray-200.justify-between.py-2.dark:border-gray-900
              [:span (u/trunc-ellipse name 23)]
-             [:span "Words recognized: " (* (/ words-known total-words) 100) "% (" words-known " / " total-words ")"]
-             (if (= words-known total-words)
+             [:span "Words recognized: " known-percentage "% (" known-words " / " total-words ")"]
+             (if (= known-words total-words)
                [:span "All words known!"]
                [:span.cursor-pointer {:on-click handle-mark-all-known}
                 (case @sure-mark? 0 "Mark all known?" 1 "You sure?")])]
